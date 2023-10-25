@@ -1,0 +1,3 @@
+INSERT INTO CATEGORY (DESCRIPTION) VALUES ('Comic books'), ('Movies'), ('Books');
+INSERT INTO SUPPLIER (NAME) VALUES ('Panini Comics'),  ('Amazon');
+INSERT INTO PRODUCT (NAME, FK_SUPPLIER, FK_CATEGORY, QUANTITY_AVALIABLE, CREATED_AT) VALUES ('Crise nas Infinitas Terras', 1, 1, 10, CURRENT_TIMESTAMP), ('Interestelar', 2, 2, 5, CURRENT_TIMESTAMP), ('Harry Potter e a Pedra Filosofal', 2, 2, 3, CURRENT_TIMESTAMP);
