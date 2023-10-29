@@ -1,8 +1,11 @@
 package br.com.curso.udemy.product.api.controller;
 
 import br.com.curso.udemy.product.api.config.exception.SucessResponse;
+import br.com.curso.udemy.product.api.dto.ProductCheckStockRequest;
 import br.com.curso.udemy.product.api.dto.ProductRequest;
 import br.com.curso.udemy.product.api.dto.ProductResponse;
+import br.com.curso.udemy.product.api.dto.ProductSalesResponse;
+import br.com.curso.udemy.product.api.dto.ProductStockDTO;
 import br.com.curso.udemy.product.api.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -63,5 +66,15 @@ public class ProductController {
     @DeleteMapping("{id}")
     public SucessResponse delete(@PathVariable Integer id){
         return productService.delete(id);
+    }
+
+    @PostMapping("check-stock")
+    public SucessResponse checkProductStock(@RequestBody ProductCheckStockRequest productCheckStockRequest){
+        return productService.checkProductStock(productCheckStockRequest);
+    }
+
+    @GetMapping("{id}/sales")
+    public ProductSalesResponse findProductSales(@PathVariable Integer id){
+        return productService.findProductsSales(id);
     }
 }

@@ -59,4 +59,8 @@ public class Product implements Serializable {
                 .category(category)
                 .build();
     }
+
+    public void updateStock(Integer quantity){
+        quantityAvailable -= quantity;
+    }
 }
