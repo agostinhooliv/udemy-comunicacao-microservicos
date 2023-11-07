@@ -223,7 +223,7 @@ public class ProductService {
             var sales = salesClient
                     .findSalesByProductId(product.getId())
                     .orElseThrow(() -> new ValidationException("The sales was not found by this product."));
-            return ProductSalesResponse.of(product, sales.getSales());
+            return ProductSalesResponse.of(product, sales.getSalesIds());
         } catch (Exception ex){
             throw new ValidationException("There was an error trying to get the product'' sales");
         }

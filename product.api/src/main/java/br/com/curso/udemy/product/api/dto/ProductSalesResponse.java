@@ -25,7 +25,7 @@ public class ProductSalesResponse {
     private LocalDateTime createdAt;
     private SupplierResponse supplier;
     private CategoryResponse category;
-    private List<String> sales;
+    private List<String> salesIds;
 
     public static ProductSalesResponse of(Product product, List<String> sales){
         return ProductSalesResponse
@@ -36,7 +36,7 @@ public class ProductSalesResponse {
                 .createdAt(product.getCreatedAt())
                 .supplier(SupplierResponse.of(product.getSupplier()))
                 .category(CategoryResponse.of(product.getCategory()))
-                .sales(sales)
+                .salesIds(sales)
                 .build();
     }
 }

@@ -20,7 +20,7 @@ export default async (req, res, next) => {
 
         if (acessToken.includes(emptySpace)) {
             const tokenType = acessToken.split(emptySpace)[0];
-            if (tokenType != bearer) {
+            if (tokenType !== bearer) {
                 throw new AuthException(401, "Token type is not allowed.");
             }
             acessToken = acessToken.split(emptySpace)[1];

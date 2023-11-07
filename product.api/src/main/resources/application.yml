@@ -45,11 +45,9 @@ app-config:
   rabbit:
     exchange:
       product: product.topic
-
     routingkey:
       product-stock: product-stock-update.routingKey
-      sales-confimation: sales-configuration.routingKey
-
+      sales-confirmation: sales-confimation.routingKey
     queue:
       product-stock: product-stock-update.queue
-      sales-confimation: sales-configuration.queue
+      sales-confirmation: sales-confirmation.queue

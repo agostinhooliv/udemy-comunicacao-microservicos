@@ -19,13 +19,13 @@ public class RabbitConfig {
     @Value("${app-config.rabbit.routingkey.product-stock}")
     private String productStockKey;
 
-    @Value("${app-config.rabbit.routingkey.sales-confimation}")
+    @Value("${app-config.rabbit.routingkey.sales-confirmation}")
     private String salesConfimationKey;
 
     @Value("${app-config.rabbit.queue.product-stock}")
     private String productStockKeyMq;
 
-    @Value("${app-config.rabbit.queue.sales-confimation}")
+    @Value("${app-config.rabbit.queue.sales-confirmation}")
     private String salesConfimationMq;
 
     @Bean

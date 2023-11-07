@@ -18,7 +18,7 @@ public class SalesConfirmationSender {
     @Value("${app-config.rabbit.exchange.product}")
     private String productTopicExchange;
 
-    @Value("${app-config.rabbit.routingkey.sales-confimation}")
+    @Value("${app-config.rabbit.routingkey.sales-confirmation}")
     private String salesConfimationKey;
 
     public void sendSalesConfirmationMessage(SalesConfirmationDTO salesConfirmationMessage){
