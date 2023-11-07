@@ -11,9 +11,22 @@ class OrderService {
         try {
 
             let orderData = req.body;
+
+            const { transactionid, serviceid } = req.headers;
+
+            console.info(
+                `Request to POST new Order with data ${JSON.stringify(
+                    orderData
+                )} 
+                | [transactionID: ${transactionid} 
+                    | serviceID: ${serviceid}]`
+            );
+
             this.validateOrderData(orderData);
             const { authUser } = req;
             const { authorization } = req.headers;
+
+            console.log(req.headers);
 
 
             let order = {
@@ -24,7 +37,7 @@ class OrderService {
                 products: orderData.products
             };
 
-            let stockisOut = await productClient.checkProductStock(order, authorization);
+            let stockisOut = await productClient.checkProductStock(order, authorization, transactionid);
             if (stockisOut) {
                 throw new OrderException(400, "The stock is out.");
             }
@@ -32,10 +45,21 @@ class OrderService {
             let createdOrder = await orderRepository.save(order);
             this.sendMessage(createdOrder);
 
-            return {
+            let response = {
                 status: 200,
-                createdOrder
-            }
+                createdOrder,
+            };
+
+            console.info(
+                `Response to POST new Order with data ${JSON.stringify(
+                    response
+                )} 
+                | [transactionID: ${transactionid} 
+                    | serviceID: ${serviceid}]`
+            );
+
+            return response;
+
         } catch (error) {
             return {
                 status: error.status ? error.status : 500,

@@ -49,6 +49,18 @@ class UserService {
     async getAcessToken(req) {
 
         try {
+
+            const { transactionid, serviceid } = req.headers;
+
+
+            console.info(
+                `Request to POST login with data ${JSON.stringify(
+                    req.body
+                )} 
+                | [transactionID: ${transactionid} 
+                    | serviceID: ${serviceid}]`
+            );
+
             const { email, password } = req.body;
             this.validateAcessTokenData(email, password);
             let user = await userRepository.findByEmail(email);
@@ -60,11 +72,20 @@ class UserService {
                 expiresIn: "1d",
             });
 
-            return {
+            let response = {
                 status: 200,
                 acessToken,
-            }
+            };
 
+            console.info(
+                `Response to POST login with data ${JSON.stringify(
+                    response
+                )} 
+                | [transactionID: ${transactionid} 
+                    | serviceID: ${serviceid}]`
+            );
+
+            return response;
 
         } catch (error) {
             return {

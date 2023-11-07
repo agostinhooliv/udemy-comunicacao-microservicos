@@ -2,6 +2,7 @@ import express from "express";
 import * as db from "../auth.api/src/config/db/initialData.js";
 import userRoutes from "./src/modules/routes/UserRoutes.js";
 import checkToken from "./src/config/auth/checkToken.js";
+import trace from "./src/config/trace.js";
 
 db.createInitialData();
 
@@ -17,11 +18,12 @@ app.get("/api/status", (req, res) => {
     });
 });
 
+app.use(trace);
 app.use(express.json());
 app.use(userRoutes);
 app.use(checkToken);
 
 
 app.listen(PORT, () => {
-    console.info('Server started sucessfuly at port ${PORT}');
+    console.info(`Server started sucessfuly at port ${PORT}`);
 });
