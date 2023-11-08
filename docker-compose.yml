@@ -1,20 +1,36 @@
 version: "3"
 services:
 
-  auth_db:
+  sales-rabbit:
+    image: rabbitmq:3-management
+    container_name: sales-rabbit
+    ports:
+      - 5672:5672
+      - 25676:25676
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  auth-db:
     image: postgres:11
-    container_name: auth-db
-    restart: always
+    container_name: auth-db    
     environment:
       - POSTGRES_DB=auth-db
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=123456
+    restart: always
     ports:
-      - 5432:5432
+      - 5432:5432    
 
-  product_db:
-    image: postgres:11
+  product-db:
     container_name: product-db
+    image: postgres:11    
     restart: always
     environment:
       - POSTGRES_DB=product-db
@@ -23,46 +39,87 @@ services:
     ports:
       - 5433:5432
 
-  sales_db:
+  sales-db:
     image: mongo:7.0.2
     container_name: sales-db
     restart: always
     environment:
       - MONGODB_USER=admin
-      - MONGODB_DATABASE=123456
+      - MONGODB_DATABASE=sales
       - MONGODB_PASS=123456
     ports:
       - 27017:27017
       - 28017:28017
 
   auth-api:
-    build: './auth.api'
-    container_name: auth.api
+    image: node:latest
+    volumes:
+      - ./:/home/node/app
+    working_dir: /home/node/app
+    networks:
+      - app-network
+    command: "tail -f /dev/null && npm start"
+    container_name: auth-api        
     environment:
       - PORT=8080
+      - API_SECRET=YXV0aC5hcGktc2VjcmV0LWNvbnRhaW5lcjEyMzQ1Ng==
+      - DB_HOST=auth-db
+      - DB_NAME=auth-db
+      - DB_USER=admin
+      - DB_PASSWORD=123456
+      - DB_PORT=5432
+    restart: on-failure
+    networks:
+      - app-network
     ports:
-      - 8080:8080  
+      - 8080:8080
 
   product-api:
     build: './product.api'
     container_name: product-api
+    depends_on:
+      -  product-db
     environment:
       - PORT=8081
+      - API_SECRET=YXV0aC5hcGktc2VjcmV0LWNvbnRhaW5lcjEyMzQ1Ng==
+      - DB_HOST=product-db
+      - DB_NAME=product-db
+      - DB_USER=admin
+      - DB_PASSWORD=123456
+      - DB_PORT=5432
+      - RABBIT_MQ_HOST=sales-rabbit
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER=guest
+      - RABBIT_MQ_PASS=guest
+      - SALES_HOST=sales-api
+      - SALES_PORT=8082
+    restart: on-failure
+    # networks:
+    #   - app-network
     ports:
       - 8081:8081
 
   sales-api:
-    build: './sales.api'
-    container_name: sales.api
+    image: node:latest
+    volumes:
+      - ./:/home/node/app
+    working_dir: /home/node/app
+    networks:
+      - app-network
+    command: "tail -f /dev/null && npm start"
+    container_name: sales-api         
     environment:
       - PORT=8082
+      - API_SECRET=YXV0aC5hcGktc2VjcmV0LWNvbnRhaW5lcjEyMzQ1Ng==
+      - MONGO_DB_URL=mongodb://sales-db:27017/sales-db
+      - RABBIT_MQ_URL=amqp://sales-rabbit:5672
+      - PRODUCT_API_URL=http://product-api:8081/api/product
+    restart: on-failure
+    networks:
+      - app-network
     ports:
       - 8082:8082
 
-  sales_rabbit:
-    image: rabbitmq:3-management
-    container_name: sales_rabbit
-    ports:
-      - 5672:5672
-      - 25676:25676
-      - 15672:15672
+networks:
+  app-network:
+    driver: bridge

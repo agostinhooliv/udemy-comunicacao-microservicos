@@ -10,7 +10,7 @@ import { RABBITMQ_URL } from "../secrets/secrets.js";
 import { listenConfirmationQueue } from "../rabbitmq/salesConfirmationListenner.js";
 
 const HALF_SECCOND = 500;
-const HALF_MINUTE = 30000;
+const HALF_MINUTE = 6000000;
 const CONTAINER_ENV = "container";
 
 

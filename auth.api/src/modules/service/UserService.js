@@ -52,7 +52,6 @@ class UserService {
 
             const { transactionid, serviceid } = req.headers;
 
-
             console.info(
                 `Request to POST login with data ${JSON.stringify(
                     req.body
